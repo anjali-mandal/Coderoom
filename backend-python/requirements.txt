@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+asyncpg
+python-dotenv
+bcrypt>=4.0.1
+PyJWT
+python-socketio[asgi]
+google-generativeai

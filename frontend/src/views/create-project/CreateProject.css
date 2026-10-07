@@ -1,0 +1,139 @@
+.create-project {
+    height: 100%;
+    width: 100%;
+    background: #f5f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.create-project-section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.create-project-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    background: white;
+    padding: 3.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    max-width: 420px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.create-project-section form input[type="text"] {
+    padding: 14px 16px;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    outline: none;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    color: #2c3e50;
+    background: #fafbfc;
+}
+
+.create-project-section form input[type="text"]::placeholder {
+    color: #9ca3af;
+}
+
+.create-project-section form input[type="text"]:hover {
+    border-color: #d1d5db;
+    background: white;
+}
+
+.create-project-section form input[type="text"]:focus {
+    border-color: #6b7280;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.05);
+}
+
+.create-project-section form input[type="submit"] {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #6b7280;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.create-project-section form input[type="submit"]:hover {
+    background: #4b5563;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.create-project-section form input[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .create-project-section {
+        padding: 1.5rem;
+    }
+
+    .create-project-section form {
+        padding: 2.5rem 1.8rem;
+        gap: 1.5rem;
+        max-width: 100%;
+    }
+
+    .create-project-section form input[type="text"] {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .create-project-section form input[type="submit"] {
+        padding: 11px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .create-project-section {
+        padding: 1rem;
+    }
+
+    .create-project-section form {
+        padding: 1.8rem;
+        gap: 1.2rem;
+    }
+
+    .create-project-section form input[type="text"] {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .create-project-section form input[type="submit"] {
+        width: auto;
+        padding: 8px 24px;
+        font-size: 12px;
+        letter-spacing: 0.3px;
+        margin: 0 auto;
+        display: block;
+    }
+}

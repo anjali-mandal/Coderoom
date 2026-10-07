@@ -1,0 +1,369 @@
+.project-main,
+.project-section {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+
+.project-section {
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+}
+
+.project-section>* {
+    height: 100%;
+    flex: 1;
+    border-radius: 0.5rem;
+}
+
+.project-section .chat {
+    background-color: #ededed;
+    position: relative;
+}
+
+.project-section .chat .messages {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    width: 80%;
+    transform: translateX(-50%);
+    left: 50%;
+    position: absolute;
+    top: 0;
+    padding-bottom: 5rem;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.project-section .chat .messages::-webkit-scrollbar {
+    display: none;
+}
+
+.project-section .chat .messages .message {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    max-width: 80%;
+    width: fit-content;
+    background-color: #dedada;
+}
+
+.project-section .chat .messages .message-own {
+    align-self: flex-end;
+    color: #102a43;
+    background-color: #b7f7d8;
+    border-bottom-right-radius: 0.15rem;
+}
+
+.project-section .chat .messages .message-other {
+    align-self: flex-start;
+    border-bottom-left-radius: 0.15rem;
+}
+
+.project-section .chat .input-area {
+    position: absolute;
+    width: 80%;
+    background-color: #d4d4d4;
+    transform: translateX(-50%);
+    left: 50%;
+    border-radius: 0.7rem;
+    bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+}
+
+.project-section .chat .input-area input {
+    padding: 0.5rem 0.7rem;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.project-section .chat .input-area button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    color: rgb(52, 51, 51);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    min-width: 40px;
+    height: 40px;
+}
+
+.project-section .code {
+    background-color: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.project-section .code .language-selector {
+    padding: 10px;
+    background-color: #252526;
+    z-index: 10;
+}
+
+.project-section .code .language-selector select {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.project-section .code .language-selector select:hover {
+    background-color: #4c4c4c;
+}
+
+.project-section .code .language-selector select option {
+    background-color: #3c3c3c;
+    color: #ffffff;
+}
+
+/* Monaco Editor Adjustments */
+.project-section .code .monaco-editor .margin {
+    background-color: #1e1e1e;
+}
+
+.project-section .review {
+    background-color: #faece1;
+    position: relative;
+    overflow-y: auto;
+    padding: 1rem;
+    padding-left: 3rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-section .review .get-review {
+    position: static;
+    align-self: flex-end;
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .project-section {
+        gap: 0.8rem;
+    }
+
+    .project-section .chat .messages {
+        width: 85%;
+    }
+
+    .project-section .chat .input-area {
+        width: 85%;
+    }
+
+    .project-section .review {
+        padding-left: 2rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .project-section {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .project-section > * {
+        height: 300px;
+    }
+
+    .project-section .chat {
+        order: 1;
+    }
+
+    .project-section .code {
+        order: 2;
+        min-height: 350px;
+    }
+
+    .project-section .review {
+        order: 3;
+        min-height: 300px;
+        padding-left: 1rem;
+    }
+
+    .project-section .chat .messages {
+        width: 90%;
+    }
+
+    .project-section .chat .input-area {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-main,
+    .project-section {
+        padding: 0.5rem;
+    }
+
+    .project-section {
+        gap: 0.6rem;
+    }
+
+    .project-section > * {
+        height: 250px;
+    }
+
+    .project-section .chat .messages {
+        width: 95%;
+        padding: 0.6rem;
+    }
+
+    .project-section .chat .input-area {
+        width: 95%;
+        padding: 0.5rem;
+        bottom: 0.5rem;
+        gap: 0.4rem;
+    }
+
+    .project-section .chat .input-area input {
+        font-size: 13px;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .project-section .chat .input-area button {
+        min-width: 38px;
+        height: 38px;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .project-section .code .language-selector {
+        padding: 8px;
+    }
+
+    .project-section .code .language-selector select {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .project-section .review {
+        padding: 0.6rem;
+        padding-left: 0.6rem;
+    }
+
+    .project-section .review .get-review {
+        top: 0.6rem;
+        right: 0.6rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-main,
+    .project-section {
+        padding: 0.3rem;
+    }
+
+    .project-section {
+        gap: 0.4rem;
+    }
+
+    .project-section > * {
+        height: 200px;
+        border-radius: 0.3rem;
+    }
+
+    .project-section .chat .messages {
+        width: 100%;
+        padding: 0.4rem;
+    }
+
+    .project-section .chat .input-area {
+        width: 100%;
+        padding: 0.4rem;
+        bottom: 0.3rem;
+        flex-direction: row;
+        gap: 0.3rem;
+    }
+
+    .project-section .chat .input-area input {
+        font-size: 12px;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .project-section .chat .input-area button {
+        min-width: 35px;
+        height: 35px;
+        font-size: 14px;
+        flex-shrink: 0;
+        padding: 0;
+    }
+
+    .project-section .code .language-selector {
+        padding: 6px;
+    }
+
+    .project-section .code .language-selector select {
+        padding: 3px 6px;
+        font-size: 11px;
+    }
+
+    .project-section .review {
+        padding: 0.4rem;
+    }
+
+    .project-section .review .get-review {
+        top: 0.4rem;
+        right: 0.4rem;
+        padding: 0.3rem 0.6rem;
+        font-size: 10px;
+    }
+}
+
+.member-invite {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.member-invite input {
+    min-width: 0;
+    flex: 1 1 150px;
+    padding: 0.55rem;
+    border: 1px solid #d7c7ba;
+    border-radius: 0.35rem;
+}
+
+.member-invite button {
+    padding: 0.55rem 0.75rem;
+    border: 0;
+    border-radius: 0.35rem;
+    background: #2f4858;
+    color: #fff;
+    cursor: pointer;
+}
+
+.member-invite button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.member-invite small {
+    flex-basis: 100%;
+    color: #5b4636;
+}

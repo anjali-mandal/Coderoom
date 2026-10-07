@@ -1,0 +1,138 @@
+.home {
+    min-height: 100vh;
+    padding: 1.5rem clamp(1.25rem, 5vw, 5rem) 4rem;
+    color: #102a43;
+    background: radial-gradient(circle at 90% 0%, rgba(183, 247, 216, 0.45), transparent 28rem), #f4f7f5;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
+}
+
+.home-section { max-width: 1180px; margin: 0 auto; }
+
+.home-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(16, 42, 67, 0.12);
+}
+
+.brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #102a43;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.25rem;
+}
+
+.brand-mark, .empty-icon, .project-icon {
+    display: grid;
+    place-items: center;
+    color: #102a43;
+    background: #b7f7d8;
+    border-radius: 0.45rem;
+}
+
+.brand-mark { width: 2rem; height: 2rem; font-family: monospace; font-size: 1.35rem; font-weight: 700; }
+
+.logout-btn {
+    padding: 0.55rem 1rem;
+    color: #102a43;
+    background: transparent;
+    border: 1px solid rgba(16, 42, 67, 0.2);
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.logout-btn:hover { color: #fff; background: #102a43; }
+
+.home-intro {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(3.5rem, 8vw, 6.5rem) 0 2.5rem;
+}
+
+.eyebrow {
+    margin-bottom: 0.7rem;
+    color: #4b7f6b;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+}
+
+.home-intro h1 {
+    max-width: 680px;
+    margin: 0;
+    color: #102a43;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(2.5rem, 5vw, 4.8rem);
+    font-weight: 400;
+    line-height: 0.98;
+}
+
+.intro-copy { max-width: 480px; margin-top: 1.1rem; color: #627d98; font-size: 1rem; line-height: 1.6; }
+
+.new-project-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.85rem 1.1rem;
+    color: #fff;
+    background: #ef8354;
+    border: 0;
+    border-radius: 0.45rem;
+    box-shadow: 0 8px 18px rgba(239, 131, 84, 0.22);
+    cursor: pointer;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.new-project-btn:hover { background: #d9673d; transform: translateY(-2px); }
+.new-project-btn span { font-size: 1.2rem; line-height: 1; }
+
+.projects-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 1.2rem; }
+.projects-heading .eyebrow { margin-bottom: 0.35rem; }
+.projects-heading h2 { margin: 0; color: #102a43; font-family: 'DM Serif Display', Georgia, serif; font-size: 2rem; font-weight: 400; }
+.projects-heading > span { color: #829ab1; font-size: 0.85rem; }
+
+.projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.85rem; }
+
+.project {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-height: 7rem;
+    padding: 1.1rem;
+    background: #fff;
+    border: 1px solid rgba(16, 42, 67, 0.08);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.project:hover { border-color: #ef8354; box-shadow: 0 12px 28px rgba(16, 42, 67, 0.09); transform: translateY(-3px); }
+.project-icon { width: 2.6rem; height: 2.6rem; flex: 0 0 auto; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.25rem; }
+.project-copy { display: flex; min-width: 0; flex-direction: column; gap: 0.35rem; }
+.project-copy strong { overflow: hidden; color: #102a43; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
+.project-copy span { color: #829ab1; font-size: 0.78rem; }
+.project-copy b { color: #ef8354; }
+
+.projects-state { padding: 3.5rem 1.5rem; color: #627d98; background: rgba(255, 255, 255, 0.7); border: 1px dashed rgba(16, 42, 67, 0.18); border-radius: 0.5rem; text-align: center; }
+.empty-state { display: flex; align-items: center; flex-direction: column; gap: 0.8rem; }
+.empty-icon { width: 3.2rem; height: 3.2rem; margin-bottom: 0.4rem; color: #fff; background: #102a43; font-size: 1.8rem; }
+.empty-state h3 { margin: 0; color: #102a43; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; font-weight: 400; }
+.empty-state p { max-width: 360px; margin: 0 0 0.6rem; line-height: 1.5; }
+.projects-error { color: #9c3f28; border-color: rgba(239, 131, 84, 0.5); }
+
+@media (max-width: 700px) {
+    .home-intro { align-items: flex-start; flex-direction: column; padding-top: 3.5rem; }
+    .new-project-btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+    .home { padding-inline: 1rem; }
+    .projects-heading h2 { font-size: 1.7rem; }
+}

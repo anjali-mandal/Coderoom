@@ -1,0 +1,30 @@
+.auth-container {
+    display: grid;
+    min-height: 100vh;
+    padding: 1.5rem;
+    color: #102a43;
+    background: radial-gradient(circle at 10% 10%, rgba(183, 247, 216, 0.6), transparent 24rem), #f4f7f5;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
+    place-items: center;
+}
+
+.auth-box { width: min(100%, 430px); padding: clamp(2rem, 6vw, 3.5rem); background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(16, 42, 67, 0.1); border-radius: 0.7rem; box-shadow: 0 24px 60px rgba(16, 42, 67, 0.12); animation: auth-rise 0.45s ease both; }
+.auth-box::before { display: block; width: fit-content; margin-bottom: 2.5rem; padding: 0.4rem 0.65rem; color: #102a43; background: #b7f7d8; border-radius: 0.35rem; content: '/ CODEROOM'; font-family: monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; }
+
+@keyframes auth-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+.auth-box h2 { margin-bottom: 2rem; color: #102a43; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 400; line-height: 1; }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; margin-bottom: 0.45rem; color: #486581; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.form-group input { width: 100%; padding: 0.85rem 0.9rem; color: #102a43; background: #f8faf9; border: 1px solid #d9e2e8; border-radius: 0.35rem; font: inherit; outline: none; }
+.form-group input:focus { background: #fff; border-color: #4b7f6b; box-shadow: 0 0 0 3px rgba(75, 127, 107, 0.14); }
+.form-group input::placeholder { color: #9fb3c8; }
+.submit-btn { width: 100%; margin-top: 0.65rem; padding: 0.9rem 1rem; color: #fff; background: #102a43; border: 0; border-radius: 0.35rem; cursor: pointer; font: inherit; font-weight: 800; }
+.submit-btn:hover:not(:disabled) { background: #1f4b67; transform: translateY(-2px); }
+.submit-btn:disabled { cursor: wait; opacity: 0.55; }
+.error-message { margin-bottom: 1.2rem; padding: 0.8rem 0.9rem; color: #8f3521; background: #fff0eb; border-left: 3px solid #ef8354; border-radius: 0.25rem; font-size: 0.85rem; line-height: 1.5; }
+.auth-link { margin-top: 1.5rem; color: #627d98; font-size: 0.85rem; text-align: center; }
+.auth-link a { color: #d9673d; font-weight: 800; text-decoration: none; }
+.auth-link a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) { .auth-container { padding: 0.8rem; } .auth-box { padding: 1.8rem 1.35rem; } }
