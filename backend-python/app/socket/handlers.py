@@ -113,15 +113,16 @@ def register_socket_handlers(sio: socketio.AsyncServer) -> None:
             text = message.strip()
             pool = get_db()
             async with pool.acquire() as connection:
-                await connection.execute(
-                    "INSERT INTO messages (project_id, user_id, text) VALUES ($1, $2, $3)",
+                row = await connection.fetchrow(
+                    """INSERT INTO messages (project_id, user_id, text)
+                    VALUES ($1, $2, $3)
+                    RETURNING id""",
                     project_uuid, user_uuid, text,
                 )
             await sio.emit(
                 "chat-message",
-                {"text": text, "userId": str(user_uuid)},
+                {"_id": str(row["id"]), "text": text, "userId": str(user_uuid)},
                 room=project_id,
-                skip_sid=sid,
             )
         except Exception as exc:
             await sio.emit("error", f"Failed to send message: {exc}", to=sid)

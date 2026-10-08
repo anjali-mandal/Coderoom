@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { io as SocketIo } from "socket.io-client"
 import Editor from '@monaco-editor/react'
@@ -20,6 +20,8 @@ const Project = () => {
     const [ memberEmail, setMemberEmail ] = useState('')
     const [ memberMessage, setMemberMessage ] = useState('')
     const [ inviting, setInviting ] = useState(false)
+    const historyLoaded = useRef(false)
+    const pendingMessages = useRef([])
 
     // Function to handle code changes from the editor
     function handleEditorChange(value) {
@@ -31,9 +33,6 @@ const Project = () => {
         if (!socket || !input.trim()) {
             return
         }
-        setMessages((prev) => {
-            return [ ...prev, { text: input.trim(), userId: user?.id } ]
-        })
         socket.emit("chat-message", input.trim())
         setInput("")
     }
@@ -55,15 +54,24 @@ const Project = () => {
     async function inviteMember(event) {
         event.preventDefault()
         setMemberMessage('')
+        const email = memberEmail.trim()
+        if (!email) {
+            setMemberMessage('Enter the member email first.')
+            return
+        }
         setInviting(true)
         try {
             const response = await apiClient.post(`/projects/${prams.id}/members`, {
-                email: memberEmail.trim(),
+                email,
             })
             setMemberMessage(`${response.data.data.name} added to this project.`)
             setMemberEmail('')
         } catch (error) {
-            setMemberMessage(error.response?.data?.detail || 'Unable to add this member.')
+            const detail = error.response?.data?.detail
+            const message = Array.isArray(detail)
+                ? detail.map((item) => item.msg).join(', ')
+                : detail || error.message
+            setMemberMessage(message || 'Unable to add this member.')
         } finally {
             setInviting(false)
         }
@@ -91,6 +99,8 @@ const Project = () => {
 
         io.on('connect', () => {
             console.log('Socket connected');
+            historyLoaded.current = false
+            pendingMessages.current = []
             io.emit("chat-history")
             io.emit("get-project-code")
         })
@@ -104,15 +114,35 @@ const Project = () => {
         })
 
         io.on('chat-history', (messages) => {
-            setMessages(messages.map((message) => ({
+            const history = messages.map((message) => ({
+                _id: message._id,
                 text: message.text || '',
                 userId: message.user,
-            })))
+            }))
+            const historyIds = new Set(history.map((message) => message._id).filter(Boolean))
+            const pending = pendingMessages.current.filter((message) => !historyIds.has(message._id))
+            setMessages([ ...history, ...pending ])
+            pendingMessages.current = []
+            historyLoaded.current = true
         })
 
         io.on('chat-message', (message) => {
+            const nextMessage = typeof message === 'string'
+                ? { text: message }
+                : {
+                    _id: message._id,
+                    text: message.text || '',
+                    userId: message.userId || message.user,
+                }
+
+            if (!historyLoaded.current) {
+                pendingMessages.current.push(nextMessage)
+            }
             setMessages((prev) => {
-                return [ ...prev, typeof message === 'string' ? { text: message } : message ]
+                if (nextMessage._id && prev.some((item) => item._id === nextMessage._id)) {
+                    return prev
+                }
+                return [ ...prev, nextMessage ]
             })
         })
 
@@ -212,6 +242,7 @@ const Project = () => {
                             value={memberEmail}
                             onChange={(event) => setMemberEmail(event.target.value)}
                             placeholder="Invite by email"
+                            aria-label="Member email"
                             required
                         />
                         <button type="submit" disabled={inviting}>

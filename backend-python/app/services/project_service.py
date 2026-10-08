@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from app.db.postgres import get_db, new_id
 
 
@@ -28,28 +30,38 @@ async def get_all_projects(user_id: str) -> list[dict]:
 
 
 async def add_project_member(project_id: str, owner_id: str, member_email: str) -> dict:
+    try:
+        project_uuid = UUID(project_id)
+        owner_uuid = UUID(owner_id)
+    except ValueError as exc:
+        raise ValueError("Invalid project or user id") from exc
+
+    email = member_email.strip().lower()
+    if not email:
+        raise ValueError("Member email is required")
+
     pool = get_db()
     async with pool.acquire() as connection:
-        member = await connection.fetchrow(
-            "SELECT id, name, email FROM users WHERE email = $1",
-            member_email.strip().lower(),
-        )
-        if not member:
-            raise ValueError("No account found for this email")
-        if str(member["id"]) == owner_id:
-            raise ValueError("You already own this project")
-
         project = await connection.fetchval(
-            "SELECT id FROM projects WHERE id = $1::uuid AND owner_id = $2::uuid",
-            project_id, owner_id,
+            "SELECT id FROM projects WHERE id = $1 AND owner_id = $2",
+            project_uuid, owner_uuid,
         )
         if not project:
             raise ValueError("Only the project owner can add members")
 
+        member = await connection.fetchrow(
+            "SELECT id, name, email FROM users WHERE email = $1",
+            email,
+        )
+        if not member:
+            raise ValueError("No account found for this email")
+        if member["id"] == owner_uuid:
+            raise ValueError("You already own this project")
+
         await connection.execute(
-            """INSERT INTO project_members (project_id, user_id) VALUES ($1::uuid, $2)
+            """INSERT INTO project_members (project_id, user_id) VALUES ($1, $2)
             ON CONFLICT (project_id, user_id) DO NOTHING""",
-            project_id, member["id"],
+            project_uuid, member["id"],
         )
     return {"id": str(member["id"]), "name": member["name"], "email": member["email"]}
 
