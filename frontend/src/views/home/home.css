@@ -98,7 +98,15 @@
 .projects-heading h2 { margin: 0; color: #102a43; font-family: 'DM Serif Display', Georgia, serif; font-size: 2rem; font-weight: 400; }
 .projects-heading > span { color: #829ab1; font-size: 0.85rem; }
 
-.projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.85rem; }
+.projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.2rem 0.85rem; }
+
+.project-item {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid rgba(16, 42, 67, 0.08);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
 
 .project {
     display: flex;
@@ -106,19 +114,50 @@
     gap: 0.9rem;
     min-height: 7rem;
     padding: 1.1rem;
-    background: #fff;
-    border: 1px solid rgba(16, 42, 67, 0.08);
-    border-radius: 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
     cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.project:hover { border-color: #ef8354; box-shadow: 0 12px 28px rgba(16, 42, 67, 0.09); transform: translateY(-3px); }
+.project-item:hover { border-color: #ef8354; box-shadow: 0 12px 28px rgba(16, 42, 67, 0.09); transform: translateY(-3px); }
 .project-icon { width: 2.6rem; height: 2.6rem; flex: 0 0 auto; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.25rem; }
 .project-copy { display: flex; min-width: 0; flex-direction: column; gap: 0.35rem; }
 .project-copy strong { overflow: hidden; color: #102a43; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
 .project-copy span { color: #829ab1; font-size: 0.78rem; }
 .project-copy b { color: #ef8354; }
+
+.home-member-invite {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.45rem;
+    padding: 0 1.1rem 1.1rem;
+}
+
+.home-member-invite input {
+    min-width: 0;
+    padding: 0.55rem 0.65rem;
+    color: #102a43;
+    background: #fff;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    border-radius: 0.35rem;
+    outline: none;
+}
+
+.home-member-invite input:focus { border-color: #4b7f6b; }
+
+.home-member-invite button {
+    padding: 0.55rem 0.7rem;
+    color: #fff;
+    background: #102a43;
+    border: 0;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.home-member-invite button:disabled { cursor: wait; opacity: 0.65; }
+.home-member-invite small { grid-column: 1 / -1; color: #4b7f6b; font-size: 0.72rem; }
 
 .projects-state { padding: 3.5rem 1.5rem; color: #627d98; background: rgba(255, 255, 255, 0.7); border: 1px dashed rgba(16, 42, 67, 0.18); border-radius: 0.5rem; text-align: center; }
 .empty-state { display: flex; align-items: center; flex-direction: column; gap: 0.8rem; }

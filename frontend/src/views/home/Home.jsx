@@ -11,6 +11,9 @@ const Home = () => {
     const [projects, setProjects] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
+    const [memberEmails, setMemberEmails] = useState({})
+    const [memberMessages, setMemberMessages] = useState({})
+    const [invitingProject, setInvitingProject] = useState(null)
 
     function navigateToProject(projectId) {
         navigate(`/project/${projectId}`)
@@ -19,6 +22,43 @@ const Home = () => {
     function handleLogout() {
         logout()
         navigate('/login')
+    }
+
+    function updateMemberEmail(projectId, email) {
+        setMemberEmails((current) => ({ ...current, [projectId]: email }))
+    }
+
+    async function inviteMember(event, projectId) {
+        event.preventDefault()
+        event.stopPropagation()
+
+        const email = (memberEmails[projectId] || '').trim()
+        if (!email) {
+            setMemberMessages((current) => ({ ...current, [projectId]: 'Enter the member email first.' }))
+            return
+        }
+
+        setInvitingProject(projectId)
+        setMemberMessages((current) => ({ ...current, [projectId]: '' }))
+        try {
+            const response = await apiClient.post(`/projects/${projectId}/members`, { email })
+            setMemberEmails((current) => ({ ...current, [projectId]: '' }))
+            setMemberMessages((current) => ({
+                ...current,
+                [projectId]: `${response.data.data.name} added to this project.`,
+            }))
+        } catch (requestError) {
+            const detail = requestError.response?.data?.detail
+            const message = Array.isArray(detail)
+                ? detail.map((item) => item.msg).join(', ')
+                : detail || requestError.message
+            setMemberMessages((current) => ({
+                ...current,
+                [projectId]: message || 'Unable to add this member.',
+            }))
+        } finally {
+            setInvitingProject(null)
+        }
     }
 
     useEffect(() => {
@@ -80,18 +120,39 @@ const Home = () => {
                     <div className="projects">
                         {projects.map((project) => {
                             return (
-                                <div
-                                    key={project._id}
-                                    onClick={() => {
-                                        navigateToProject(project._id)
-                                    }}
-                                    className="project"
-                                >
-                                    <div className="project-icon">{project.name.charAt(0).toUpperCase()}</div>
-                                    <div className="project-copy">
-                                        <strong>{project.name}</strong>
-                                        <span>Open workspace <b>↗</b></span>
+                                <div className="project-item" key={project._id}>
+                                    <div
+                                        onClick={() => {
+                                            navigateToProject(project._id)
+                                        }}
+                                        className="project"
+                                    >
+                                        <div className="project-icon">{project.name.charAt(0).toUpperCase()}</div>
+                                        <div className="project-copy">
+                                            <strong>{project.name}</strong>
+                                            <span>Open workspace <b>↗</b></span>
+                                        </div>
                                     </div>
+                                    <form
+                                        className="home-member-invite"
+                                        onSubmit={(event) => inviteMember(event, project._id)}
+                                    >
+                                        <input
+                                            type="email"
+                                            value={memberEmails[project._id] || ''}
+                                            onChange={(event) => updateMemberEmail(project._id, event.target.value)}
+                                            onClick={(event) => event.stopPropagation()}
+                                            placeholder="Invite by email"
+                                            aria-label={`Invite a member to ${project.name}`}
+                                            required
+                                        />
+                                        <button type="submit" disabled={invitingProject === project._id}>
+                                            {invitingProject === project._id ? 'Adding...' : 'Add member'}
+                                        </button>
+                                        {memberMessages[project._id] && (
+                                            <small role="status">{memberMessages[project._id]}</small>
+                                        )}
+                                    </form>
                                 </div>
                             )
                         })}

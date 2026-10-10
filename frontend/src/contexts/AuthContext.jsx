@@ -7,11 +7,40 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        localStorage.removeItem('token');
+        const storedToken = localStorage.getItem('token');
+
+        if (!storedToken) {
+            setLoading(false);
+            return;
+        }
+
+        setToken(storedToken);
+
+        fetch(`${API_BASE_URL}/auth/me`, {
+            headers: { Authorization: `Bearer ${storedToken}` }
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new Error('Session expired. Please log in again.');
+                }
+                return response.json();
+            })
+            .then((currentUser) => {
+                setUser(currentUser);
+            })
+            .catch((err) => {
+                localStorage.removeItem('token');
+                setToken(null);
+                setUser(null);
+                setError(err.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
     const register = async (name, email, password) => {
@@ -31,6 +60,7 @@ export function AuthProvider({ children }) {
             }
 
             localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
             setToken(data.token);
             setUser(data.user);
             return data;
@@ -59,6 +89,7 @@ export function AuthProvider({ children }) {
             }
 
             localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
             setToken(data.token);
             setUser(data.user);
             return data;
@@ -72,6 +103,7 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setToken(null);
         setUser(null);
     };
