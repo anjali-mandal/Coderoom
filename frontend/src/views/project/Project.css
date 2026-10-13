@@ -104,12 +104,21 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    min-width: 0;
+}
+
+.project-section .code-toolbar {
+    background-color: #252526;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 8px 10px;
+    z-index: 10;
 }
 
 .project-section .code .language-selector {
-    padding: 10px;
-    background-color: #252526;
-    z-index: 10;
+    padding: 0;
 }
 
 .project-section .code .language-selector select {
@@ -130,6 +139,136 @@
 .project-section .code .language-selector select option {
     background-color: #3c3c3c;
     color: #ffffff;
+}
+
+.code-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.code-actions button {
+    border: 0;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.run-code {
+    background-color: #16825d;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.run-code:hover:not(:disabled) {
+    background-color: #1a9b70;
+}
+
+.run-code:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.clear-output {
+    background-color: #3c3c3c;
+    color: #cccccc;
+}
+
+.clear-output:hover {
+    background-color: #4c4c4c;
+}
+
+.editor-area {
+    min-height: 0;
+    flex: 1 1 auto;
+}
+
+.code.output-expanded .editor-area {
+    display: none;
+}
+
+.output-resize-handle {
+    flex: 0 0 5px;
+    cursor: ns-resize;
+    background: #252526;
+    border-top: 1px solid #3c3c3c;
+}
+
+.output-resize-handle:hover {
+    background: #16825d;
+}
+
+.output-panel {
+    flex: 0 0 auto;
+    min-height: 110px;
+    border-top: 1px solid #3c3c3c;
+    background-color: #181818;
+    color: #d4d4d4;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.code.output-expanded .output-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-bottom: 1px solid #2d2d2d;
+    color: #cccccc;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+}
+
+.output-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.output-status {
+    color: #7bdcb5;
+    letter-spacing: 0;
+}
+
+.expand-output {
+    border: 0;
+    background: transparent;
+    color: #cccccc;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 12px;
+    padding: 0 3px;
+}
+
+.expand-output:hover {
+    color: #ffffff;
+}
+
+.output-panel pre {
+    margin: 0;
+    padding: 10px;
+    min-height: 80px;
+    color: #d4d4d4;
+    font: 12px/1.5 Consolas, 'Courier New', monospace;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    overflow: hidden;
+}
+
+.html-preview {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+    border: 0;
+    background: #ffffff;
 }
 
 /* Monaco Editor Adjustments */
@@ -254,6 +393,10 @@
         padding: 8px;
     }
 
+    .project-section .code-toolbar {
+        padding: 6px 8px;
+    }
+
     .project-section .code .language-selector select {
         padding: 4px 8px;
         font-size: 12px;
@@ -315,6 +458,10 @@
 
     .project-section .code .language-selector {
         padding: 6px;
+    }
+
+    .project-section .code-toolbar {
+        padding: 5px 6px;
     }
 
     .project-section .code .language-selector select {

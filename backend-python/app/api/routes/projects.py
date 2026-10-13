@@ -2,7 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.dependencies import get_current_user
 from app.schemas.project import AddMemberRequest, CreateProjectRequest
-from app.services.project_service import add_project_member, create_project, get_all_projects
+from app.services.project_service import (
+    add_project_member,
+    create_project,
+    delete_project,
+    get_all_projects,
+)
 
 router = APIRouter()
 
@@ -30,3 +35,15 @@ async def add_member(
         return {"status": "success", "data": member}
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.delete("/{project_id}")
+async def delete(
+    project_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        await delete_project(project_id, current_user["userId"])
+        return {"status": "success"}
+    except ValueError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc

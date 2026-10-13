@@ -16,6 +16,13 @@ const Project = () => {
     const [ socket, setSocket ] = useState(null)
     const [ code, setCode ] = useState("// Write your code here...\n")
     const [ language, setLanguage ] = useState("javascript")
+    const [ output, setOutput ] = useState("")
+    const [ isRunning, setIsRunning ] = useState(false)
+    const [ htmlPreview, setHtmlPreview ] = useState("")
+    const [ outputHeight, setOutputHeight ] = useState(150)
+    const [ outputExpanded, setOutputExpanded ] = useState(false)
+    const [ resizingOutput, setResizingOutput ] = useState(false)
+    const resizeStart = useRef({ y: 0, height: 150 })
     const [ review, setReview ] = useState("*No review yet. Click 'get-review' to generate a code review.*")
     const [ memberEmail, setMemberEmail ] = useState('')
     const [ memberMessage, setMemberMessage ] = useState('')
@@ -23,10 +30,75 @@ const Project = () => {
     const historyLoaded = useRef(false)
     const pendingMessages = useRef([])
 
+    useEffect(() => {
+        if (!resizingOutput) {
+            return undefined
+        }
+
+        function resize(event) {
+            const nextHeight = resizeStart.current.height - (event.clientY - resizeStart.current.y)
+            setOutputHeight(Math.max(110, Math.min(420, nextHeight)))
+        }
+
+        function stopResizing() {
+            setResizingOutput(false)
+        }
+
+        window.addEventListener('mousemove', resize)
+        window.addEventListener('mouseup', stopResizing)
+        return () => {
+            window.removeEventListener('mousemove', resize)
+            window.removeEventListener('mouseup', stopResizing)
+        }
+    }, [resizingOutput])
+
+    function startOutputResize(event) {
+        event.preventDefault()
+        resizeStart.current = { y: event.clientY, height: outputHeight }
+        setOutputExpanded(false)
+        setResizingOutput(true)
+    }
+
     // Function to handle code changes from the editor
     function handleEditorChange(value) {
-        setCode(value)
-        socket.emit("code-change", value)
+        const nextCode = value || ""
+        setCode(nextCode)
+        if (socket) {
+            socket.emit("code-change", nextCode)
+        }
+    }
+
+    async function runCode() {
+        setIsRunning(true)
+        setOutput("")
+        setHtmlPreview("")
+
+        try {
+            if (language === "html") {
+                setHtmlPreview(code)
+                setOutput("HTML preview updated.")
+                return
+            }
+
+            if (language === "css") {
+                setHtmlPreview(`<style>${code}</style><main class="preview-content"><h1>CSS preview</h1><p>Your CSS is applied here.</p><button>Sample button</button></main>`)
+                setOutput("CSS preview updated.")
+                return
+            }
+
+            const response = await apiClient.post("/projects/run", { language, code })
+            setOutput(response.data.data.output || "Program finished without output.")
+        } catch (error) {
+            const detail = error.response?.data?.detail
+            setOutput(`Error: ${detail || error.message || "Unable to run this code."}`)
+        } finally {
+            setIsRunning(false)
+        }
+    }
+
+    function clearOutput() {
+        setOutput("")
+        setHtmlPreview("")
     }
 
     function handleUserMessage() {
@@ -202,8 +274,9 @@ const Project = () => {
                     </div>
 
                 </div>
-                <div className="code">
-                    <div className="language-selector">
+                <div className={`code ${outputExpanded ? 'output-expanded' : ''}`}>
+                    <div className="code-toolbar">
+                        <div className="language-selector">
                         <select
                             value={language}
                             onChange={(e) => changeLanguage(e.target.value)}
@@ -216,24 +289,69 @@ const Project = () => {
                             <option value="html">HTML</option>
                             <option value="css">CSS</option>
                         </select>
+                        </div>
+                        <div className="code-actions">
+                            <button type="button" className="clear-output" onClick={clearOutput}>Clear</button>
+                            <button type="button" className="run-code" onClick={runCode} disabled={isRunning}>
+                                {isRunning ? 'Running...' : '▶ Run'}
+                            </button>
+                        </div>
                     </div>
-                    <Editor
-                        height="90%"
-                        width="100%"
-                        language={language}
-                        value={code}
-                        onChange={handleEditorChange}
-                        theme="vs-dark"
-                        options={{
-                            minimap: { enabled: true },
-                            fontSize: 14,
-                            wordWrap: 'on',
-                            automaticLayout: true,
-                            formatOnType: true,
-                            formatOnPaste: true,
-                            cursorBlinking: "smooth",
-                        }}
+                    <div className="editor-area">
+                        <Editor
+                            height="100%"
+                            width="100%"
+                            language={language}
+                            value={code}
+                            onChange={handleEditorChange}
+                            theme="vs-dark"
+                            options={{
+                                minimap: { enabled: true },
+                                fontSize: 14,
+                                wordWrap: 'on',
+                                automaticLayout: true,
+                                formatOnType: true,
+                                formatOnPaste: true,
+                                cursorBlinking: "smooth",
+                            }}
+                        />
+                    </div>
+                    <div
+                        className="output-resize-handle"
+                        onMouseDown={startOutputResize}
+                        title="Drag to resize output"
+                        aria-label="Resize output panel"
                     />
+                    <div
+                        className="output-panel"
+                        style={outputExpanded ? undefined : { height: `${outputHeight}px` }}
+                    >
+                        <div className="output-header">
+                            <span>OUTPUT</span>
+                            <div className="output-controls">
+                                <span className="output-status">{isRunning ? 'Running' : output || htmlPreview ? 'Finished' : 'Ready'}</span>
+                                <button
+                                    type="button"
+                                    className="expand-output"
+                                    onClick={() => setOutputExpanded((expanded) => !expanded)}
+                                    aria-label={outputExpanded ? 'Collapse output' : 'Expand output'}
+                                    title={outputExpanded ? 'Collapse output' : 'Expand output'}
+                                >
+                                    {outputExpanded ? '⌄' : '⌃'}
+                                </button>
+                            </div>
+                        </div>
+                        {htmlPreview ? (
+                            <iframe
+                                className="html-preview"
+                                title="HTML output preview"
+                                sandbox=""
+                                srcDoc={htmlPreview}
+                            />
+                        ) : (
+                            <pre>{output || 'Click ▶ Run to execute your code.'}</pre>
+                        )}
+                    </div>
                 </div>
                 <div className="review">
                     <form className="member-invite" onSubmit={inviteMember}>

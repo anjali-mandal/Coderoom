@@ -14,6 +14,7 @@ const Home = () => {
     const [memberEmails, setMemberEmails] = useState({})
     const [memberMessages, setMemberMessages] = useState({})
     const [invitingProject, setInvitingProject] = useState(null)
+    const [deletingProject, setDeletingProject] = useState(null)
 
     function navigateToProject(projectId) {
         navigate(`/project/${projectId}`)
@@ -58,6 +59,26 @@ const Home = () => {
             }))
         } finally {
             setInvitingProject(null)
+        }
+    }
+
+    async function deleteProject(event, project) {
+        event.preventDefault()
+        event.stopPropagation()
+
+        setError('')
+        setDeletingProject(project._id)
+        try {
+            await apiClient.delete(`/projects/${project._id}`)
+            setProjects((current) => current.filter((item) => item._id !== project._id))
+        } catch (requestError) {
+            const detail = requestError.response?.data?.detail
+            setMemberMessages((current) => ({
+                ...current,
+                [project._id]: detail || requestError.message || 'Unable to delete this project.',
+            }))
+        } finally {
+            setDeletingProject(null)
         }
     }
 
@@ -153,6 +174,14 @@ const Home = () => {
                                             <small role="status">{memberMessages[project._id]}</small>
                                         )}
                                     </form>
+                                    <button
+                                        type="button"
+                                        className="delete-project-btn"
+                                        onClick={(event) => deleteProject(event, project)}
+                                        disabled={deletingProject === project._id}
+                                    >
+                                        {deletingProject === project._id ? 'Deleting...' : 'Delete project'}
+                                    </button>
                                 </div>
                             )
                         })}

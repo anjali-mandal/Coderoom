@@ -66,6 +66,26 @@ async def add_project_member(project_id: str, owner_id: str, member_email: str) 
     return {"id": str(member["id"]), "name": member["name"], "email": member["email"]}
 
 
+async def delete_project(project_id: str, owner_id: str) -> None:
+    try:
+        project_uuid = UUID(project_id)
+        owner_uuid = UUID(owner_id)
+    except ValueError as exc:
+        raise ValueError("Invalid project or user id") from exc
+
+    pool = get_db()
+    async with pool.acquire() as connection:
+        deleted = await connection.fetchval(
+            """DELETE FROM projects
+            WHERE id = $1 AND owner_id = $2
+            RETURNING id""",
+            project_uuid,
+            owner_uuid,
+        )
+    if not deleted:
+        raise ValueError("Only the project owner can delete this project")
+
+
 async def update_project_code(project_id: str, code: str) -> None:
     pool = get_db()
     async with pool.acquire() as connection:

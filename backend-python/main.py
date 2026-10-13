@@ -4,7 +4,7 @@ import socketio
 from engineio.middleware import Middleware
 import asyncio
 
-from app.api.routes import auth, projects
+from app.api.routes import auth, execution, projects
 from app.core.config import settings
 from app.db.postgres import connect_to_postgres, close_postgres
 from app.socket.handlers import register_socket_handlers
@@ -29,6 +29,7 @@ async def shutdown_event() -> None:
 
 fastapi_app.include_router(auth.router, prefix="/auth", tags=["auth"])
 fastapi_app.include_router(projects.router, prefix="/projects", tags=["projects"])
+fastapi_app.include_router(execution.router, prefix="/projects", tags=["execution"])
 
 # Configure Socket.IO with proper session management
 sio = socketio.AsyncServer(

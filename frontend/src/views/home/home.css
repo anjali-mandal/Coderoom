@@ -159,6 +159,29 @@
 .home-member-invite button:disabled { cursor: wait; opacity: 0.65; }
 .home-member-invite small { grid-column: 1 / -1; color: #4b7f6b; font-size: 0.72rem; }
 
+.delete-project-btn {
+    width: calc(100% - 2.2rem);
+    margin: 0 1.1rem 1.1rem;
+    padding: 0.5rem 0.7rem;
+    color: #9c3f28;
+    background: transparent;
+    border: 1px solid rgba(156, 63, 40, 0.25);
+    border-radius: 0.35rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.delete-project-btn:hover:not(:disabled) {
+    color: #fff;
+    background: #9c3f28;
+}
+
+.delete-project-btn:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
 .projects-state { padding: 3.5rem 1.5rem; color: #627d98; background: rgba(255, 255, 255, 0.7); border: 1px dashed rgba(16, 42, 67, 0.18); border-radius: 0.5rem; text-align: center; }
 .empty-state { display: flex; align-items: center; flex-direction: column; gap: 0.8rem; }
 .empty-icon { width: 3.2rem; height: 3.2rem; margin-bottom: 0.4rem; color: #fff; background: #102a43; font-size: 1.8rem; }
